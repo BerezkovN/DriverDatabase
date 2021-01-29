@@ -1,0 +1,12 @@
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.csprojAssemblyReference.cache
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.AuthorForm.resources
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.BookForm.resources
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.MainForm.resources
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.Properties.Resources.resources
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.csproj.GenerateResource.cache
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.csproj.CoreCompileInputs.cache
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\bin\Debug\DriverDatabase.exe.config
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\bin\Debug\DriverDatabase.exe
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\bin\Debug\DriverDatabase.pdb
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.exe
+C:\Users\Nikita\source\repos\DriverDatabase\DriverDatabase\obj\Debug\DriverDatabase.pdb
