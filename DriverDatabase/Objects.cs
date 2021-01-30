@@ -7,30 +7,11 @@ namespace DriverDatabase
 	public class Driver
 	{
 		public String Name { get; set; }
-		public DateTime BirthDate;
-		[XmlIgnore]
+		public String FavColor { get; set; }
 		public List<Car> Cars;
 
 		public Driver() {
 			Cars = new List<Car>();
-		}
-
-		public static bool operator== (Driver a1, Driver a2)
-        {
-			if (a1.Name == a2.Name && a1.BirthDate == a2.BirthDate)
-            {
-				return true;
-            }
-			return false;
-        }
-
-		public static bool operator!=(Driver a1, Driver a2)
-		{
-			if (a1.Name != a2.Name || a1.BirthDate != a2.BirthDate)
-			{
-				return true;
-			}
-			return false;
 		}
 
 		public override String ToString()
@@ -42,16 +23,25 @@ namespace DriverDatabase
 	public class Car
     {
 		public String Name { get; set; }
+		public String Brand { get; set; }
+		[XmlIgnore]
 		public List<Driver> Drivers = new List<Driver>();
 
-		public string StringAuthors
+		public static bool Compare(Car car1, Car car2)
+        {
+			if (car1.Name == car2.Name && car1.Brand == car2.Brand)
+				return true;
+			return false;
+        }
+
+		public string DriversString
         {
 			get
             {
 				string result = "";
-				foreach (Driver author in Drivers)
+				foreach (Driver driver in Drivers)
 				{
-					result += author.Name + ", ";
+					result += driver.Name + ", ";
 				}
 
 				return result.Substring(0, result.Length - 2);
@@ -60,7 +50,7 @@ namespace DriverDatabase
 
         public override string ToString()
         {
-			return Name + " by " + StringAuthors;
+			return Name + " (" + Brand + ")" + " driven by " + DriversString;
         }
     }
 }

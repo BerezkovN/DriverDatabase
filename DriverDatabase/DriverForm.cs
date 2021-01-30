@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,11 +10,11 @@ namespace DriverDatabase
 	public class DriverForm : Form
 	{
 		private TextBox NameTextBox;
-		private TextBox BirthDateTextBox;
+		private TextBox FavColorTextBox;
 		private Button OKButton;
 		private Button CloseButton;
         private Label NameLabel;
-        private Label MarkLabel;
+        private Label ColorLabel;
         public Driver driver;
 		public Driver Driver
 		{
@@ -21,8 +22,8 @@ namespace DriverDatabase
 			{
 				this.driver = value;
 				this.NameTextBox.Text = this.driver.Name;
-				this.BirthDateTextBox.Text = this.driver.BirthDate.ToShortDateString();
-			}
+				this.FavColorTextBox.Text = this.driver.FavColor;
+            }
 
 			get
 			{
@@ -39,15 +40,15 @@ namespace DriverDatabase
 		{
             this.NameLabel = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.MarkLabel = new System.Windows.Forms.Label();
-            this.BirthDateTextBox = new System.Windows.Forms.TextBox();
+            this.ColorLabel = new System.Windows.Forms.Label();
+            this.FavColorTextBox = new System.Windows.Forms.TextBox();
             this.OKButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NameLabel
             // 
-            this.NameLabel.Location = new System.Drawing.Point(20, 20);
+            this.NameLabel.Location = new System.Drawing.Point(62, 18);
             this.NameLabel.Name = "NameLabel";
             this.NameLabel.Size = new System.Drawing.Size(60, 20);
             this.NameLabel.TabIndex = 0;
@@ -55,29 +56,29 @@ namespace DriverDatabase
             // 
             // NameTextBox
             // 
-            this.NameTextBox.Location = new System.Drawing.Point(109, 20);
+            this.NameTextBox.Location = new System.Drawing.Point(148, 18);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(119, 22);
             this.NameTextBox.TabIndex = 1;
             // 
-            // MarkLabel
+            // ColorLabel
             // 
-            this.MarkLabel.Location = new System.Drawing.Point(20, 60);
-            this.MarkLabel.Name = "MarkLabel";
-            this.MarkLabel.Size = new System.Drawing.Size(70, 20);
-            this.MarkLabel.TabIndex = 2;
-            this.MarkLabel.Text = "BirthDate:";
+            this.ColorLabel.Location = new System.Drawing.Point(34, 58);
+            this.ColorLabel.Name = "ColorLabel";
+            this.ColorLabel.Size = new System.Drawing.Size(108, 20);
+            this.ColorLabel.TabIndex = 2;
+            this.ColorLabel.Text = "Favourite color:";
             // 
-            // MarkTextBox
+            // FavColorTextBox
             // 
-            this.BirthDateTextBox.Location = new System.Drawing.Point(109, 58);
-            this.BirthDateTextBox.Name = "MarkTextBox";
-            this.BirthDateTextBox.Size = new System.Drawing.Size(119, 22);
-            this.BirthDateTextBox.TabIndex = 3;
+            this.FavColorTextBox.Location = new System.Drawing.Point(148, 58);
+            this.FavColorTextBox.Name = "FavColorTextBox";
+            this.FavColorTextBox.Size = new System.Drawing.Size(119, 22);
+            this.FavColorTextBox.TabIndex = 3;
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(20, 100);
+            this.OKButton.Location = new System.Drawing.Point(43, 118);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(85, 37);
             this.OKButton.TabIndex = 4;
@@ -86,24 +87,25 @@ namespace DriverDatabase
             // 
             // CloseButton
             // 
-            this.CloseButton.Location = new System.Drawing.Point(170, 100);
+            this.CloseButton.Location = new System.Drawing.Point(193, 118);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(85, 37);
             this.CloseButton.TabIndex = 5;
             this.CloseButton.Text = "Cancel";
             // 
-            // AuthorForm
+            // DriverForm
             // 
-            this.ClientSize = new System.Drawing.Size(279, 149);
+            this.ClientSize = new System.Drawing.Size(326, 167);
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.NameTextBox);
-            this.Controls.Add(this.MarkLabel);
-            this.Controls.Add(this.BirthDateTextBox);
+            this.Controls.Add(this.ColorLabel);
+            this.Controls.Add(this.FavColorTextBox);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.CloseButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "AuthorForm";
+            this.Name = "DriverForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Add driver";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,8 +118,20 @@ namespace DriverDatabase
 				this.driver = new Driver();
 			}
 
-			this.driver.Name = this.NameTextBox.Text;
-            this.driver.BirthDate = Convert.ToDateTime(this.BirthDateTextBox.Text);
+            //Don't forget to fix
+            if (DriverList.Instance.Drivers.Any(el => el.Name == this.NameTextBox.Text))
+            {
+                MessageBox.Show("Driver with this name already exists!!");
+                return;
+            }
+            else if (this.NameTextBox.Text == "")
+            {
+                MessageBox.Show("Driver has to have a name");
+                return;
+            }
+
+            this.driver.Name = this.NameTextBox.Text;
+            this.driver.FavColor = this.FavColorTextBox.Text;
 
             DriverList.Instance.FireListChanged();
 

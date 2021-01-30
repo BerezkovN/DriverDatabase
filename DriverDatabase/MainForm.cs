@@ -1,10 +1,8 @@
 ﻿
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DriverDatabase
 {
@@ -49,8 +47,8 @@ namespace DriverDatabase
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,7 +58,7 @@ namespace DriverDatabase
             this.ListBox.ItemHeight = 20;
             this.ListBox.Location = new System.Drawing.Point(37, 53);
             this.ListBox.Name = "ListBox";
-            this.ListBox.Size = new System.Drawing.Size(262, 164);
+            this.ListBox.Size = new System.Drawing.Size(262, 144);
             this.ListBox.TabIndex = 0;
             this.ListBox.SelectedIndexChanged += new System.EventHandler(this.OnListBoxSelectedIndexChanged);
             // 
@@ -68,26 +66,26 @@ namespace DriverDatabase
             // 
             this.AddButton.Location = new System.Drawing.Point(315, 53);
             this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(142, 40);
+            this.AddButton.Size = new System.Drawing.Size(142, 50);
             this.AddButton.TabIndex = 1;
-            this.AddButton.Text = "Add author";
-            this.AddButton.Click += new System.EventHandler(this.OnAddButtonClick);
+            this.AddButton.Text = "Add driver";
+            this.AddButton.Click += new System.EventHandler(this.OnAddDriverButtonClick);
             // 
             // EditButton
             // 
             this.EditButton.Enabled = false;
-            this.EditButton.Location = new System.Drawing.Point(396, 110);
+            this.EditButton.Location = new System.Drawing.Point(315, 136);
             this.EditButton.Name = "EditButton";
-            this.EditButton.Size = new System.Drawing.Size(142, 40);
+            this.EditButton.Size = new System.Drawing.Size(142, 50);
             this.EditButton.TabIndex = 2;
             this.EditButton.Text = "Edit";
             this.EditButton.Click += new System.EventHandler(this.OnEditButtonClick);
             // 
             // DeleteButton
             // 
-            this.DeleteButton.Location = new System.Drawing.Point(396, 170);
+            this.DeleteButton.Location = new System.Drawing.Point(477, 136);
             this.DeleteButton.Name = "DeleteButton";
-            this.DeleteButton.Size = new System.Drawing.Size(142, 40);
+            this.DeleteButton.Size = new System.Drawing.Size(142, 50);
             this.DeleteButton.TabIndex = 3;
             this.DeleteButton.Text = "Delete";
             this.DeleteButton.Click += new System.EventHandler(this.OnDeleteButtonClick);
@@ -98,9 +96,9 @@ namespace DriverDatabase
             this.Folder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Folder.Location = new System.Drawing.Point(38, 29);
             this.Folder.Name = "Folder";
-            this.Folder.Size = new System.Drawing.Size(63, 18);
+            this.Folder.Size = new System.Drawing.Size(59, 18);
             this.Folder.TabIndex = 4;
-            this.Folder.Text = "Authors:";
+            this.Folder.Text = "Drivers:";
             // 
             // menuStrip1
             // 
@@ -137,16 +135,6 @@ namespace DriverDatabase
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(477, 53);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(142, 40);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Add book";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnAddBookButtonClick);
-            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
@@ -154,9 +142,19 @@ namespace DriverDatabase
             this.viewToolStripMenuItem.Text = "View";
             this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(477, 53);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(142, 50);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Add car";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnAddCarButtonClick);
+            // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(639, 234);
+            this.ClientSize = new System.Drawing.Size(639, 211);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Folder);
             this.Controls.Add(this.ListBox);
@@ -186,7 +184,7 @@ namespace DriverDatabase
 			this.ListBox.Items.Clear();
             if (selectedItem is String || selectedItem is null)
             {
-                Folder.Text = "Authors:";
+                Folder.Text = "Drivers:";
 
                 for (int i = 0; i < DriverList.Instance.Count; i++)
                 {
@@ -195,26 +193,27 @@ namespace DriverDatabase
             }
             else if (selectedItem is Driver)
             {
-                Driver selectedAuthor = (Driver)selectedItem;
+                Driver selectedDriver = (Driver)selectedItem;
 
-                Folder.Text = selectedAuthor.Name + ":";
-                for (int i = 0; i < selectedAuthor.Cars.Count; i++)
+                Folder.Text = selectedDriver.Name + ":";
+
+                for (int i = 0; i < selectedDriver.Cars.Count; i++)
                 {
-                    this.ListBox.Items.Add(selectedAuthor.Cars[i]);
+                    this.ListBox.Items.Add(selectedDriver.Cars[i]);
                 }
             }
 		}
 
-		private void OnAddButtonClick(object sender, EventArgs e)
+		private void OnAddDriverButtonClick(object sender, EventArgs e)
 		{
-			DriverForm authorForm = new DriverForm();
-			if (authorForm.ShowDialog() == DialogResult.OK)
+			DriverForm driverForm = new DriverForm();
+			if (driverForm.ShowDialog() == DialogResult.OK)
 			{
-				DriverList.Instance.Add(authorForm.Driver);
+				DriverList.Instance.Add(driverForm.Driver);
 			}
 		}
 
-        private void OnAddBookButtonClick(object sender, EventArgs e)
+        private void OnAddCarButtonClick(object sender, EventArgs e)
         {
             CarForm bookForm = new CarForm();
             if (bookForm.ShowDialog() == DialogResult.OK)
@@ -225,19 +224,32 @@ namespace DriverDatabase
 
         private void OnEditButtonClick(object sender, EventArgs e)
 		{
-			if (this.ListBox.SelectedItem == null || this.ListBox.SelectedItem is String) return;
+			if (this.ListBox.SelectedItem == null) return;
 
             if (this.ListBox.SelectedItem is Driver)
             {
-                DriverForm authorForm = new DriverForm();
-                authorForm.Driver = this.ListBox.SelectedItem as Driver;
-                authorForm.ShowDialog();
+                DriverForm driverForm = new DriverForm();
+                driverForm.Driver = this.ListBox.SelectedItem as Driver;
+                driverForm.ShowDialog();
             }
             else if (this.ListBox.SelectedItem is Car)
             {
-                CarForm bookForm = new CarForm();
-                bookForm.Car = this.ListBox.SelectedItem as Car;
-                bookForm.ShowDialog();
+                CarForm carForm = new CarForm();
+                carForm.Car = this.ListBox.SelectedItem as Car;
+                bool[] checkedDrivers = new bool[DriverList.Instance.Drivers.Count];
+
+                for (int index = 0; index < DriverList.Instance.Drivers.Count; index++)
+                {
+                    foreach (var driver in carForm.Car.Drivers)
+                    {
+                        if (DriverList.Instance.Drivers[index] == driver)
+                            checkedDrivers[index] = true;
+                    }
+                }
+
+                carForm.CheckedDrivers = checkedDrivers;
+
+                carForm.ShowDialog();
             }
 		}
 
@@ -260,23 +272,11 @@ namespace DriverDatabase
 		private void OnFormLoad(object sender, System.EventArgs e)
 		{
             try
-            {
-                CarList.Instance.LoadFromFile(CarList.DefaultFileName);
-            }
-            catch (System.IO.FileNotFoundException ex)
-            {
-                CarList.Instance.CreateFile(CarList.DefaultFileName);
-                CarList.Instance.SaveToFile(CarList.DefaultFileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to load BookList: " + ex.ToString());
-            }
-
-            try
 			{
 				DriverList.Instance.LoadFromFile(DriverList.DefaultFileName);
-			}
+
+                CarList.Instance.LoadFromDrivers();
+            }
 			catch (System.IO.FileNotFoundException ex)
 			{
                 DriverList.Instance.CreateFile(DriverList.DefaultFileName);
@@ -284,10 +284,8 @@ namespace DriverDatabase
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load AuthorList: " + ex.ToString());
+                MessageBox.Show("Failed to load DriverList: " + ex.ToString());
             }
-
-            CarList.Instance.SetCorrectDrivers();
         }
 
 		private void OnFormClosed(object sender, System.EventArgs e)
@@ -299,7 +297,6 @@ namespace DriverDatabase
 			try
 			{
 				DriverList.Instance.SaveToFile(DriverList.DefaultFileName);
-                CarList.Instance.SaveToFile(CarList.DefaultFileName);
 			}
 			catch (Exception ex)
 			{
@@ -310,9 +307,6 @@ namespace DriverDatabase
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CarList.Instance.Cars = new List<Car>();
-            CarList.Instance.SaveToFile(CarList.DefaultFileName);
-            CarList.Instance.LoadFromFile(CarList.DefaultFileName);
-
             DriverList.Instance.Drivers = new List<Driver>();
             DriverList.Instance.SaveToFile(DriverList.DefaultFileName);
             DriverList.Instance.LoadFromFile(DriverList.DefaultFileName);
@@ -320,7 +314,6 @@ namespace DriverDatabase
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CarList.Instance.SaveToFile(CarList.DefaultFileName);
             DriverList.Instance.SaveToFile(DriverList.DefaultFileName);
         }
 

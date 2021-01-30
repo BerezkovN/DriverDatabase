@@ -20,7 +20,11 @@ namespace DriverDatabase
 	class DriverList : Listable
 	{
 		private static DriverList instance = new DriverList();
-		public static DriverList Instance { get { return instance; } set { } }
+		public static DriverList Instance 
+		{ 
+			get { return instance; } 
+			set { } 
+		}
 
 		public List<Driver> Drivers = new List<Driver>();
 		
@@ -76,8 +80,6 @@ namespace DriverDatabase
 			this.Drivers = (List<Driver>)serializer.Deserialize(reader);
 			reader.Close();
 
-			InisitializeDriver();
-
 			FireListChanged();
 		}
 
@@ -88,24 +90,6 @@ namespace DriverDatabase
 
 			}
 		}
-
-		private void InisitializeDriver()
-        {
-            for (int i = 0; i < CarList.Instance.Cars.Count; i++)
-            {
-                for (int b = 0; b < DriverList.Instance.Drivers.Count; b++)
-                {
-                    for (int c = 0; c < CarList.Instance.Cars[i].Drivers.Count; c++)
-                    {
-						if (DriverList.Instance.Drivers[b] == CarList.Instance.Cars[i].Drivers[c])
-                        {
-							DriverList.Instance.Drivers[b].Cars.Add(CarList.Instance.Cars[i]);
-						}
-                    }
-				}
-			}
-            
-        }
 	}
 
 	class CarList : Listable
@@ -147,22 +131,27 @@ namespace DriverDatabase
 			FireListChanged();
 		}
 
-		readonly public static string DefaultFileName = @"cars.xml";
-
-		public void SaveToFile(String fileName)
+		public void LoadFromDrivers()
 		{
-			XmlSerializer serializer = new XmlSerializer(typeof(List<Car>));
-			StreamWriter writer = new StreamWriter(fileName);
-			serializer.Serialize(writer, this.Cars);
-			writer.Close();
-		}
-
-		public void LoadFromFile(String fileName)
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(List<Car>));
-			StreamReader reader = new StreamReader(fileName);
-			this.Cars = (List<Car>)serializer.Deserialize(reader);
-			reader.Close();
+            foreach (var driver in DriverList.Instance.Drivers)
+            {
+                foreach (var car in driver.Cars.ToList())
+                {
+					if (!CarList.Instance.Cars.Any(el => Car.Compare(el, car)))
+					{
+						CarList.Instance.Cars.Add(car);
+						car.Drivers.Add(driver);
+					}
+					else
+                    {
+						Car createdCar = CarList.Instance.Cars.Find(el => Car.Compare(el, car));
+						createdCar.Drivers.Add(driver);
+						driver.Cars.Remove(car);
+						driver.Cars.Add(createdCar);
+					}
+					
+				}
+            }
 
 			FireListChanged();
 		}
@@ -170,22 +159,6 @@ namespace DriverDatabase
 		public void CreateFile(String fileName)
         {
 			using (FileStream fs = File.Create(fileName)) { 
-			}
-		}
-
-		public void SetCorrectDrivers()
-        {
-			for (int i = 0; i < this.Cars.Count; i++)
-			{
-				for (int a = 0; a < this.Cars[i].Drivers.Count; a++)
-				{
-					foreach (var driver in DriverList.Instance.Drivers)
-					{
-						if (driver == this.Cars[i].Drivers[a])
-							this.Cars[i].Drivers[a] = driver;
-
-					}
-				}
 			}
 		}
 	}
