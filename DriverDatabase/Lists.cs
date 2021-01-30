@@ -131,8 +131,6 @@ namespace DriverDatabase
 
 		public int Count { get { return Cars.Count; } }
 
-
-
 		public void Add(Car car)
 		{
 			Cars.Add(car);

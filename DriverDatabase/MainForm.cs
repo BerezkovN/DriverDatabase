@@ -22,7 +22,11 @@ namespace DriverDatabase
         public Button DeleteButton;
         private ToolStripMenuItem clearToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
+
         private Object selectedItem;
+        private List<ToolStripItem> itemList;
+        private ToolStripMenuItem viewToolStripMenuItem;
+        private List<Object> objectList;
 
 		public MainForm()
 		{
@@ -43,9 +47,10 @@ namespace DriverDatabase
             this.Folder = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +63,6 @@ namespace DriverDatabase
             this.ListBox.Size = new System.Drawing.Size(262, 164);
             this.ListBox.TabIndex = 0;
             this.ListBox.SelectedIndexChanged += new System.EventHandler(this.OnListBoxSelectedIndexChanged);
-            this.ListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBox_MouseDoubleClick);
             // 
             // AddButton
             // 
@@ -102,7 +106,8 @@ namespace DriverDatabase
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(639, 28);
@@ -118,6 +123,20 @@ namespace DriverDatabase
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(477, 53);
@@ -128,19 +147,12 @@ namespace DriverDatabase
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnAddBookButtonClick);
             // 
-            // clearToolStripMenuItem
+            // viewToolStripMenuItem
             // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -186,7 +198,6 @@ namespace DriverDatabase
                 Driver selectedAuthor = (Driver)selectedItem;
 
                 Folder.Text = selectedAuthor.Name + ":";
-                this.ListBox.Items.Add("...");
                 for (int i = 0; i < selectedAuthor.Cars.Count; i++)
                 {
                     this.ListBox.Items.Add(selectedAuthor.Cars[i]);
@@ -296,13 +307,6 @@ namespace DriverDatabase
 			}
 		}
 
-        private void ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            selectedItem = ListBox.SelectedItem;
-            if (selectedItem != null && !(selectedItem is Car))
-                DriverList.Instance.FireListChanged();
-        }
-
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CarList.Instance.Cars = new List<Car>();
@@ -320,7 +324,47 @@ namespace DriverDatabase
             DriverList.Instance.SaveToFile(DriverList.DefaultFileName);
         }
 
-        // pomocne funkcie
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            itemList = new List<ToolStripItem>();
+            ToolStripItem firstItem = new ToolStripMenuItem
+            {
+                Size = new System.Drawing.Size(126, 26),
+                Text = "All drivers"
+            };
+            firstItem.Click += new System.EventHandler(this.viewMenu_Click);
+            itemList.Add(firstItem);
 
+            objectList = new List<object>();
+            objectList.Add("All drivers");
+
+            int count = 1;
+            foreach (var driver in DriverList.Instance.Drivers)
+            {
+                objectList.Add(driver);
+
+                ToolStripItem item = new ToolStripMenuItem
+                {
+                    Name = count.ToString(),
+                    Size = new System.Drawing.Size(126, 26),
+                    Text = driver.Name
+                };
+                item.Click += new System.EventHandler(this.viewMenu_Click);
+                itemList.Add(item);
+
+                count++;
+            }
+
+            viewToolStripMenuItem.DropDownItems.Clear();
+            viewToolStripMenuItem.DropDownItems.AddRange(itemList.ToArray());
+        }
+
+        private void viewMenu_Click(object sender, EventArgs e)
+        {
+            string toParse = (sender as ToolStripItem) != itemList[0] ? (sender as ToolStripItem).Name : "0";
+            selectedItem = objectList[int.Parse(toParse)];
+
+            DriverList.Instance.FireListChanged();
+        }
     }
 }
