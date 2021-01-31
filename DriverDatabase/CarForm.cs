@@ -13,7 +13,6 @@ namespace DriverDatabase
         private Button CloseButton;
         private Label NameLabel;
         private List<Driver> AddedDrivers = new List<Driver>();
-        private bool isEdit = false;
         private Panel panel;
         private Label label1;
         private Car car;
@@ -27,7 +26,6 @@ namespace DriverDatabase
                 this.car = value;
                 this.NameTextBox.Text = this.car.Name;
                 this.BrandTextBox.Text = this.car.Brand;
-                this.isEdit = true;
             }
 
             get
@@ -185,30 +183,38 @@ namespace DriverDatabase
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            bool isEdit = true;
             if (this.car == null)
             {
                 this.car = new Car();
-            }
-
-            if (CarList.Instance.Cars.Any(el => Car.Compare(el, this.car)))
-            {
-                MessageBox.Show("Car with same properties already exists!!");
-                return;
-            }
-            else if (this.NameTextBox.Text == "")
-            {
-                MessageBox.Show("Car has to have a name");
-                return;
-            }
-            else if (this.BrandTextBox.Text == "")
-            {
-                MessageBox.Show("Car has to have a brand");
-                return;
+                isEdit = false;
             }
 
             this.car.Name = this.NameTextBox.Text;
             this.car.Brand = this.BrandTextBox.Text;
 
+            if (this.NameTextBox.Text == "")
+            {
+                MessageBox.Show("Car has to have a name");
+                return;
+            }
+            if (this.BrandTextBox.Text == "")
+            {
+                MessageBox.Show("Car has to have a brand");
+                return;
+            }
+
+            if (CarList.Instance.Cars.Any(el => Car.Compare(el, this.car)) && !isEdit)
+            {
+                MessageBox.Show("Car with same properties already exists!!");
+                return;
+            }
+
+            if (CheckedDrivers.Any(el => el == true) == false)
+            {
+                MessageBox.Show("Car has to have at least 1 driver");
+                return;
+            }
             ResetDriverCars();
 
             CarList.Instance.FireListChanged();

@@ -10,6 +10,13 @@ namespace DriverDatabase
 		public String FavColor { get; set; }
 		public List<Car> Cars;
 
+		public static bool Compare(Driver driver1, Driver driver2)
+        {
+			if (driver1.Name == driver2.Name && driver1.FavColor == driver2.FavColor)
+				return true;
+			return false;
+        }
+
 		public Driver() {
 			Cars = new List<Car>();
 		}

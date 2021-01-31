@@ -8,6 +8,6 @@
       </Car>
     </Cars>
     <Name>Tolik</Name>
-    <FavColor>blue</FavColor>
+    <FavColor>Blue</FavColor>
   </Driver>
 </ArrayOfDriver>

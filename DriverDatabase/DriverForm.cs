@@ -113,25 +113,27 @@ namespace DriverDatabase
 
 		private void OKButton_Click(object sender, EventArgs e)
 		{
+            bool isEdit = true;
 			if ((Object)this.driver == null)
 			{
 				this.driver = new Driver();
+                isEdit = false;
 			}
 
-            //Don't forget to fix
-            if (DriverList.Instance.Drivers.Any(el => el.Name == this.NameTextBox.Text))
-            {
-                MessageBox.Show("Driver with this name already exists!!");
-                return;
-            }
-            else if (this.NameTextBox.Text == "")
+            this.driver.Name = this.NameTextBox.Text;
+            this.driver.FavColor = this.FavColorTextBox.Text;
+
+            if (this.NameTextBox.Text == "")
             {
                 MessageBox.Show("Driver has to have a name");
                 return;
             }
 
-            this.driver.Name = this.NameTextBox.Text;
-            this.driver.FavColor = this.FavColorTextBox.Text;
+            if (DriverList.Instance.Drivers.Any(el => Driver.Compare(el, this.driver)) && !isEdit)
+            {
+                MessageBox.Show("Driver with this name and color already exists!!");
+                return;
+            }
 
             DriverList.Instance.FireListChanged();
 
